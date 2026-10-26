@@ -1,0 +1,839 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberShield AI | Cybersecurity Assistant</title>
+
+<style>
+:root {
+  --bg: #0b1020;
+  --sidebar: #080d19;
+  --panel: #111a2e;
+  --panel-hover: #192541;
+  --border: #26344e;
+  --text: #eef2ff;
+  --muted: #96a4bf;
+  --accent: #7180ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  padding: 24px 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 7px 25px;
+}
+
+.brand-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #7180ff, #32c8d5);
+  display: grid;
+  place-items: center;
+  font-size: 23px;
+}
+
+.brand-name {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.brand-sub {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.new-chat {
+  width: 100%;
+  padding: 12px;
+  background: #6878ff;
+  color: white;
+  border: 0;
+  border-radius: 11px;
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.section-label {
+  color: #7e8ba5;
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  font-weight: 800;
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+.nav-item {
+  width: 100%;
+  background: transparent;
+  color: #b7c3dc;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 12px 10px;
+  text-align: left;
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  background: #151f35;
+  border-color: #283653;
+  color: white;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding: 17px 8px 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* MAIN CHAT AREA */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.topbar {
+  height: 68px;
+  border-bottom: 1px solid #202b41;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  flex-shrink: 0;
+}
+
+.top-title {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.online {
+  color: #81e6ba;
+  font-size: 11px;
+}
+
+.online::before {
+  content: "";
+  display: inline-block;
+  height: 7px;
+  width: 7px;
+  background: #45d6a0;
+  border-radius: 50%;
+  margin-right: 7px;
+}
+
+.chat-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 25px 22px 35px;
+  scroll-behavior: smooth;
+}
+
+.content {
+  max-width: 790px;
+  width: 100%;
+  margin: auto;
+}
+
+.welcome {
+  text-align: center;
+  padding: 38px 0 25px;
+}
+
+.pill {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 30px;
+  background: #171f40;
+  border: 1px solid #303c70;
+  color: #aab5ff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.welcome h1 {
+  font-size: clamp(29px, 4vw, 43px);
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  margin: 20px 0 13px;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #a5adff, #56d6df);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.welcome p {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 14px;
+  max-width: 530px;
+  margin: auto;
+}
+
+.topics-heading {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 20px 0 13px;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.category {
+  background: linear-gradient(145deg, #131d32, #101729);
+  border: 1px solid var(--border);
+  padding: 17px;
+  border-radius: 15px;
+  transition: .2s;
+}
+
+.category:hover {
+  border-color: #6576ff;
+  transform: translateY(-2px);
+  background: var(--panel-hover);
+}
+
+.category-icon {
+  font-size: 23px;
+  margin-bottom: 11px;
+}
+
+.category-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.category-desc {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.category-link {
+  display: block;
+  margin-top: 13px;
+  color: #aab4ff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.notice {
+  color: #9eacc5;
+  background: #111a2d;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px;
+  margin-top: 17px;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* CATEGORY QUESTIONS */
+
+.question-list {
+  display: grid;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.question-btn {
+  background: #121c30;
+  border: 1px solid var(--border);
+  color: #dfe7fb;
+  padding: 15px;
+  border-radius: 11px;
+  text-align: left;
+  font-size: 13px;
+}
+
+.question-btn:hover {
+  background: #1a2741;
+  border-color: var(--accent);
+}
+
+.back-btn {
+  background: transparent;
+  border: 0;
+  color: #a9b4ff;
+  padding: 8px 0;
+  margin-bottom: 12px;
+}
+
+/* CHAT MESSAGES */
+
+.message {
+  display: flex;
+  gap: 11px;
+  margin-bottom: 23px;
+  align-items: flex-start;
+}
+
+.message.user {
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: #1c2945;
+  font-size: 17px;
+}
+
+.message.user .avatar {
+  background: #303c70;
+}
+
+.bubble {
+  max-width: min(82%, 620px);
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  background: #121b2e;
+  border-radius: 4px 15px 15px 15px;
+  line-height: 1.75;
+  font-size: 13px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.message.user .bubble {
+  background: #29365d;
+  border-color: #3d4d7d;
+  border-radius: 15px 4px 15px 15px;
+}
+
+.bot-label {
+  color: #a8b1ff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 7px;
+}
+
+/* INPUT AREA */
+
+.composer-area {
+  padding: 12px 22px 20px;
+  flex-shrink: 0;
+  background: linear-gradient(transparent, var(--bg) 22%);
+}
+
+.composer {
+  max-width: 790px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #121a2d;
+  border: 1px solid #34415e;
+  border-radius: 16px;
+  padding: 8px 9px 8px 17px;
+}
+
+.composer:focus-within {
+  border-color: #7180ff;
+  box-shadow: 0 0 0 2px #7180ff20;
+}
+
+.composer input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: white;
+  background: transparent;
+  padding: 11px 0;
+  font-size: 13px;
+}
+
+.composer input::placeholder {
+  color: #7f8da9;
+}
+
+.send-btn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 11px;
+  background: #7180ff;
+  color: white;
+  font-size: 18px;
+}
+
+.send-btn:hover {
+  background: #8995ff;
+}
+
+.disclaimer {
+  max-width: 790px;
+  margin: 9px auto 0;
+  text-align: center;
+  color: #687792;
+  font-size: 10px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.menu-btn {
+  display: none;
+  background: transparent;
+  color: white;
+  border: 0;
+  font-size: 21px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 720px) {
+  .sidebar {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+    left: -280px;
+    transition: left .25s;
+    box-shadow: 15px 0 40px #0005;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  .topbar {
+    padding: 0 15px;
+    gap: 12px;
+  }
+
+  .chat-scroll {
+    padding: 15px;
+  }
+
+  .welcome {
+    padding-top: 23px;
+  }
+
+  .categories {
+    grid-template-columns: 1fr;
+  }
+
+  .composer-area {
+    padding: 10px 12px 14px;
+  }
+
+  .bubble {
+    max-width: 88%;
+  }
+
+  .welcome h1 {
+    letter-spacing: -1px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🛡️</div>
+      <div>
+        <div class="brand-name">CyberShield</div>
+        <div class="brand-sub">SECURITY ASSISTANT</div>
+      </div>
+    </div>
+
+    <button class="new-chat" id="newChat">＋ &nbsp; New conversation</button>
+
+    <div class="section-label">QUICK TOPICS</div>
+    <div id="sidebarTopics"></div>
+
+    <div class="sidebar-bottom">
+      <strong>🔒 Privacy first</strong><br>
+      Never share passwords, OTPs, PINs or recovery codes in chat.<br><br>
+      Cybersecurity educational demo
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="menu-btn" id="menuBtn">☰</button>
+        <div class="top-title">CyberShield Assistant</div>
+      </div>
+      <div class="online">Assistant ready</div>
+    </header>
+
+    <section class="chat-scroll" id="chatScroll">
+      <div class="content">
+
+        <div id="homeView">
+          <div class="welcome">
+            <div class="pill">🛡 YOUR DIGITAL SAFETY COMPANION</div>
+            <h1>How can I help you<br><span class="gradient-text">stay safe online?</span></h1>
+            <p>Ask a question in your own words or choose a topic below. Let's work through your cybersecurity problem together.</p>
+          </div>
+
+          <div class="topics-heading">Choose a topic to get started</div>
+          <div class="categories" id="categories"></div>
+
+          <div class="notice">
+            ✨ <strong>Quick tip:</strong> If an account or bank account is at risk, tell me what happened. Do not include your private credentials.
+          </div>
+        </div>
+
+        <div id="questionView" class="hidden"></div>
+        <div id="messagesView" class="hidden"></div>
+
+      </div>
+    </section>
+
+    <footer class="composer-area">
+      <form class="composer" id="chatForm">
+        <input
+          type="text"
+          id="userInput"
+          placeholder="Message CyberShield..."
+          autocomplete="off"
+          aria-label="Type your message"
+        >
+        <button class="send-btn" type="submit" aria-label="Send message">➤</button>
+      </form>
+      <div class="disclaimer">
+        CyberShield can make mistakes. For urgent financial fraud, contact your bank directly.
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script>
+const topics = [
+  {
+    name: "Account Hacked",
+    icon: "🔐",
+    desc: "Recover your account and secure your login.",
+    questions: [
+      "My account was hacked. What should I do?",
+      "Someone changed my password",
+      "How do I log out of unknown devices?",
+      "How do I enable two-factor authentication?",
+      "I cannot access my email account"
+    ]
+  },
+  {
+    name: "Suspicious Links",
+    icon: "🔗",
+    desc: "Identify phishing messages and unsafe websites.",
+    questions: [
+      "I clicked a suspicious link",
+      "How can I identify a fake website?",
+      "I entered my password on a suspicious page",
+      "I received a strange email or SMS",
+      "How do I report phishing?"
+    ]
+  },
+  {
+    name: "Scams & Payments",
+    icon: "💳",
+    desc: "Protect your money, OTP and banking accounts.",
+    questions: [
+      "I shared an OTP with someone",
+      "I sent money to a scammer",
+      "Someone is asking for my bank details",
+      "I received a fake prize message",
+      "How do I protect online payments?"
+    ]
+  },
+  {
+    name: "Device Security",
+    icon: "🦠",
+    desc: "Protect your phone, laptop and personal files.",
+    questions: [
+      "My phone is acting strangely",
+      "I found an unknown app on my device",
+      "How do I check for malware?",
+      "My device is showing virus pop-ups",
+      "How do I check app permissions?"
+    ]
+  },
+  {
+    name: "Privacy & Safety",
+    icon: "🛡️",
+    desc: "Improve passwords, privacy and online safety.",
+    questions: [
+      "How do I create a strong password?",
+      "How do I secure my WhatsApp account?",
+      "Is public Wi-Fi safe?",
+      "How do I protect my social media privacy?",
+      "Someone is blackmailing me online"
+    ]
+  }
+];
+
+const categoriesEl = document.getElementById("categories");
+const sidebarTopicsEl = document.getElementById("sidebarTopics");
+const homeView = document.getElementById("homeView");
+const questionView = document.getElementById("questionView");
+const messagesView = document.getElementById("messagesView");
+const chatScroll = document.getElementById("chatScroll");
+const sidebar = document.getElementById("sidebar");
+
+let messages = [];
+let activeTopic = null;
+
+function scrollBottom() {
+  chatScroll.scrollTop = chatScroll.scrollHeight;
+}
+
+function showHome() {
+  activeTopic = null;
+  homeView.classList.remove("hidden");
+  questionView.classList.add("hidden");
+  messagesView.classList.add("hidden");
+  sidebar.classList.remove("open");
+  scrollBottom();
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+function renderCategories() {
+  categoriesEl.innerHTML = "";
+  sidebarTopicsEl.innerHTML = "";
+
+  topics.forEach((topic, index) => {
+    const card = document.createElement("button");
+    card.className = "category";
+    card.innerHTML = `
+      <div class="category-icon">${topic.icon}</div>
+      <div class="category-title">${topic.name}</div>
+      <div class="category-desc">${topic.desc}</div>
+      <div class="category-link">Explore topic →</div>
+    `;
+    card.addEventListener("click", () => showQuestions(index));
+    categoriesEl.appendChild(card);
+
+    const nav = document.createElement("button");
+    nav.className = "nav-item";
+    nav.textContent = topic.icon + "  " + topic.name;
+    nav.addEventListener("click", () => {
+      showQuestions(index);
+      sidebar.classList.remove("open");
+    });
+    sidebarTopicsEl.appendChild(nav);
+  });
+}
+
+function showQuestions(index) {
+  activeTopic = topics[index];
+  homeView.classList.add("hidden");
+  messagesView.classList.add("hidden");
+  questionView.classList.remove("hidden");
+
+  questionView.innerHTML = `
+    <button class="back-btn" id="backHome">← Back to topics</button>
+    <div style="font-size:11px;color:#9ba8ff;font-weight:800;letter-spacing:1px">
+      CYBERSHIELD / ${escapeHTML(activeTopic.name.toUpperCase())}
+    </div>
+    <h2 style="font-size:29px;margin:12px 0 8px">
+      ${activeTopic.icon} ${escapeHTML(activeTopic.name)}
+    </h2>
+    <p style="color:#96a4bf;font-size:13px;line-height:1.7">
+      ${escapeHTML(activeTopic.desc)} Choose a question to get started.
+    </p>
+    <div class="question-list" id="questionList"></div>
+  `;
+
+  document.getElementById("backHome").addEventListener("click", showHome);
+
+  const list = document.getElementById("questionList");
+
+  activeTopic.questions.forEach(question => {
+    const button = document.createElement("button");
+    button.className = "question-btn";
+    button.textContent = "›  " + question;
+    button.addEventListener("click", () => sendMessage(question));
+    list.appendChild(button);
+  });
+
+  scrollBottom();
+}
+
+function addMessage(role, content) {
+  messages.push({ role, content });
+  renderMessages();
+}
+
+function renderMessages() {
+  homeView.classList.add("hidden");
+  questionView.classList.add("hidden");
+  messagesView.classList.remove("hidden");
+
+  messagesView.innerHTML = messages.map(message => {
+    const isUser = message.role === "user";
+    return `
+      <div class="message ${isUser ? "user" : "assistant"}">
+        <div class="avatar">${isUser ? "👤" : "🛡️"}</div>
+        <div class="bubble">
+          ${isUser ? "" : '<div class="bot-label">CYBERSHIELD ASSISTANT</div>'}
+          ${escapeHTML(message.content)}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  scrollBottom();
+}
+
+function getResponse(text) {
+  const message = text.toLowerCase();
+
+  if (/\b(hello|hi|hey|salam|assalam|how are you)\b/.test(message)) {
+    return "Hello! 👋 Welcome to CyberShield. I'm here to help you stay safer online. Tell me what happened, or ask me about account security, phishing, scams, device safety or privacy.";
+  }
+
+  if (/(hacked|hack my|account stolen|password changed|can't log in|cannot access my account)/.test(message)) {
+    return "🔐 ACCOUNT RECOVERY\n\n1. Open the service's official app or website.\n2. Use its official account recovery process.\n3. Change your password from a trusted device.\n4. Sign out of unfamiliar devices and sessions.\n5. Secure your linked email account and enable two-factor authentication.\n\nIf your bank account is involved, contact your bank immediately. Never share recovery codes or OTPs.";
+  }
+
+  if (/(suspicious link|phishing|fake website|clicked a link|strange email|suspicious page|fake sms)/.test(message)) {
+    return "🔗 SUSPICIOUS LINK GUIDANCE\n\n• Close the suspicious page and do not download anything.\n• If you entered a password, change it using the official website and update other accounts where you reused it.\n• If you entered bank or card details, contact your bank immediately through its official channel.\n• Run updates and check your device for unfamiliar downloads.\n• Report and block the sender.\n\nSimply opening a link does not always mean your device was compromised, but stay alert.";
+  }
+
+  if (/(otp|scam|scammer|sent money|bank details|bank account|payment fraud|credit card|debit card|money stolen)/.test(message)) {
+    return "💳 SCAM & PAYMENT SAFETY\n\n1. Stop communicating with the suspected scammer.\n2. Never share another OTP, PIN or password.\n3. Contact your bank or payment provider through its official app or phone number.\n4. Ask them to secure your account and review or dispute the transaction.\n5. Keep screenshots, messages and transaction references as evidence.\n6. Report the incident to the relevant platform and local cybercrime authority.";
+  }
+
+  if (/(virus|malware|unknown app|phone is slow|pop.?up|device infected|phone acting|permissions)/.test(message)) {
+    return "🦠 DEVICE SECURITY\n\n• Do not tap suspicious pop-ups or install apps from their links.\n• Remove unfamiliar apps you did not intentionally install.\n• Update your operating system and browser.\n• Review app permissions, especially Accessibility and device administrator access.\n• Run a scan with a reputable security tool.\n• If banking information may be compromised, contact your bank using a trusted device.";
+  }
+
+  if (/(strong password|password security|two.factor|2fa|whatsapp|public wi.fi|privacy|blackmail|secure my account|protect my|social media)/.test(message)) {
+    let advice = "🛡️ SECURITY & PRIVACY TIPS\n\n• Use long, unique passwords for every account.\n• Enable two-factor authentication.\n• Keep your phone, browser and apps updated.\n• Download applications only from official stores.\n• Review privacy settings and connected devices.\n• Never share OTPs, passwords or recovery codes.";
+
+    if (message.includes("blackmail")) {
+      advice += "\n\nIf someone is blackmailing you, do not pay or send more material. Preserve evidence, report and block the account, and seek help from someone you trust or the appropriate authorities.";
+    }
+
+    if (message.includes("wi-fi")) {
+      advice += "\n\nOn public Wi-Fi, avoid sensitive transactions on untrusted networks. Check that websites use HTTPS and turn off automatic connections to unknown networks.";
+    }
+
+    return advice;
+  }
+
+  return "I can help you work through this. 🛡️\n\nCould you tell me a little more about what happened?\n\nI can guide you through:\n• Recovering a hacked account\n• Handling suspicious links\n• Online scams and payment fraud\n• Phone and computer security\n• Passwords and privacy\n\nPlease don't share your password, OTP, PIN or other confidential information here.";
+}
+
+function sendMessage(text) {
+  const cleanText = text.trim();
+  if (!cleanText) return;
+
+  addMessage("user", cleanText);
+  const response = getResponse(cleanText);
+  addMessage("assistant", response);
+
+  document.getElementById("userInput").value = "";
+  sidebar.classList.remove("open");
+}
+
+document.getElementById("chatForm").addEventListener("submit", event => {
+  event.preventDefault();
+  sendMessage(document.getElementById("userInput").value);
+});
+
+document.getElementById("newChat").addEventListener("click", () => {
+  messages = [];
+  document.getElementById("userInput").value = "";
+  showHome();
+});
+
+document.getElementById("menuBtn").addEventListener("click", () => {
+  sidebar.classList.toggle("open");
+});
+
+renderCategories();
+showHome();
+
+//ok ho gaya
+
+</script>
+</body>
+</html>
